@@ -8,6 +8,8 @@ Installation
 
 Install the module as usual using the composer client with the module name `mestrona/magento-module-categoryredirect`.
 
+    composer require mestrona/magento-module-categoryredirect
+
 
 Use
 ---
