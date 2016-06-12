@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="\Magento\Catalog\Helper\Category">
+        <plugin name="replaceUrl" type="\Mestrona\CategoryRedirect\Helper\Catalog\Category\Plugin" sortOrder="1"/>
+    </type>
+    <type name="\Magento\Catalog\Observer\MenuCategoryData">
+        <plugin name="markActiveOnRedirectUrl" type="\Mestrona\CategoryRedirect\Observer\Catalog\MenuCategoryData\Plugin" sortOrder="1"/>
+    </type>
+</config>
