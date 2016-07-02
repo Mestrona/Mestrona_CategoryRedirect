@@ -44,7 +44,7 @@ class InstallData implements InstallDataInterface
             'redirect_url',
             [
                 'type' => 'varchar',
-                'group' => 'Content',
+                'group' => 'General',
                 'label' => 'Redirect to another URL',
                 'input' => 'text',
                 'required' => false,
