@@ -20,6 +20,16 @@ class CatalogAttributesTest extends \PHPUnit_Framework_TestCase
      */
     protected $categoryHelper;
 
+    /**
+     * @var string
+     */
+    protected $uniq;
+
+    /**
+     * @var string
+     */
+    protected $customUrl;
+
     protected function setUp()
     {
         /**
@@ -37,10 +47,12 @@ class CatalogAttributesTest extends \PHPUnit_Framework_TestCase
         $categoryOne = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
             'Magento\Catalog\Model\Category'
         );
+        $this->uniq = uniqid();
+        $this->customUrl = 'foo-' . $this->uniq . 'bar';
         $categoryOne
-            ->setName('Home Category ' . uniqid())->setPath($category->getPath())
+            ->setName('Home Category ' . $this->uniq)->setPath($category->getPath())
             ->setIsActive(true)
-            ->setRedirectUrl('/foo-bar');
+            ->setRedirectUrl($this->customUrl);
         $category->getResource()->save($categoryOne);
 
         $this->category = $categoryOne;
@@ -69,7 +81,7 @@ class CatalogAttributesTest extends \PHPUnit_Framework_TestCase
     public function testRedirectUrlAttributeIsInCollection()
     {
         $collection = $this->tree->getCollection()->addAttributeToFilter('entity_id' , $this->category->getId());
-        $this->assertEquals('/foo-bar', $collection->getFirstItem()->getRedirectUrl());
+        $this->assertEquals($this->customUrl, $collection->getFirstItem()->getRedirectUrl());
     }
 
     /**
@@ -78,7 +90,7 @@ class CatalogAttributesTest extends \PHPUnit_Framework_TestCase
     public function testGetCategoryUrl()
     {
         $url = $this->categoryHelper->getCategoryUrl($this->category);
-        $this->assertEquals('http://localhost/index.php/foo-bar', $url);
+        $this->assertEquals('http://localhost/index.php/' . $this->customUrl, $url);
     }
 
     /**
@@ -102,10 +114,9 @@ class CatalogAttributesTest extends \PHPUnit_Framework_TestCase
         );
 
         $block = $layout->addBlock(\Magento\Theme\Block\Html\Topmenu::class, 'test');
-
         $block->setTemplate('Magento_Theme::html/topmenu.phtml');
 
         $result = $block->toHtml();
-        $this->assertContains('http://localhost/index.php/foo-bar', $result);
+        $this->assertContains('http://localhost/index.php/' . $this->customUrl, $result);
     }
 }
