@@ -30,7 +30,10 @@ class CatalogAttributesTest extends \PHPUnit_Framework_TestCase
         $categoryOne = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
             'Magento\Catalog\Model\Category'
         );
-        $categoryOne->setName('Category ' . uniqid())->setPath($category->getPath())->setIsActive(true);
+        $categoryOne
+            ->setName('Home Category ' . uniqid())->setPath($category->getPath())
+            ->setIsActive(true)
+            ->setRedirectUrl('/');
         $category->getResource()->save($categoryOne);
 
         $this->category = $categoryOne;
@@ -54,7 +57,7 @@ class CatalogAttributesTest extends \PHPUnit_Framework_TestCase
 
     public function testRedirectUrlAttributeIsInCollection()
     {
-        $collection = $this->tree->getCollection();
-        $this->assertTrue($collection->getFirstItem()->hasData('redirect_url'));
+        $collection = $this->tree->getCollection()->addAttributeToFilter('entity_id' , $this->category->getId());
+        $this->assertEquals('/', $collection->getFirstItem()->getRedirectUrl());
     }
 }
