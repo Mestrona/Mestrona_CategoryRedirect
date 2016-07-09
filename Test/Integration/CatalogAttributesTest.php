@@ -1,6 +1,8 @@
 <?php
 namespace Mestrona\CategoryRedirect\Test\Unit;
 
+use Magento\Framework\App\Area;
+
 class CatalogAttributesTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -12,6 +14,11 @@ class CatalogAttributesTest extends \PHPUnit_Framework_TestCase
      * @var \Magento\Catalog\Model\ResourceModel\Category\Tree
      */
     protected $tree;
+
+    /**
+     * @var \Magento\Catalog\Helper\Category
+     */
+    protected $categoryHelper;
 
     protected function setUp()
     {
@@ -33,13 +40,17 @@ class CatalogAttributesTest extends \PHPUnit_Framework_TestCase
         $categoryOne
             ->setName('Home Category ' . uniqid())->setPath($category->getPath())
             ->setIsActive(true)
-            ->setRedirectUrl('/');
+            ->setRedirectUrl('/foo-bar');
         $category->getResource()->save($categoryOne);
 
         $this->category = $categoryOne;
 
         $this->tree = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
             'Magento\Catalog\Model\ResourceModel\Category\Tree'
+        );
+
+        $this->categoryHelper = $this->tree = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
+            'Magento\Catalog\Helper\Category'
         );
     }
 
@@ -58,6 +69,43 @@ class CatalogAttributesTest extends \PHPUnit_Framework_TestCase
     public function testRedirectUrlAttributeIsInCollection()
     {
         $collection = $this->tree->getCollection()->addAttributeToFilter('entity_id' , $this->category->getId());
-        $this->assertEquals('/', $collection->getFirstItem()->getRedirectUrl());
+        $this->assertEquals('/foo-bar', $collection->getFirstItem()->getRedirectUrl());
+    }
+
+    /**
+     * Check the helper itself
+     */
+    public function testGetCategoryUrl()
+    {
+        $url = $this->categoryHelper->getCategoryUrl($this->category);
+        $this->assertEquals('http://localhost/index.php/foo-bar', $url);
+    }
+
+    /**
+     * Check if menu items have the right URL
+     *
+     * @magentoAppArea frontend
+     */
+    public function testUrlInMenu()
+    {
+        \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(
+            'Magento\Framework\View\DesignInterface'
+        )->setDesignTheme(
+            'Magento/blank'
+        );
+
+        /**
+         * @var $layout \Magento\Framework\View\LayoutInterface
+         */
+        $layout = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(
+            \Magento\Framework\View\LayoutInterface::class
+        );
+
+        $block = $layout->addBlock(\Magento\Theme\Block\Html\Topmenu::class, 'test');
+
+        $block->setTemplate('Magento_Theme::html/topmenu.phtml');
+
+        $result = $block->toHtml();
+        $this->assertContains('http://localhost/index.php/foo-bar', $result);
     }
 }
