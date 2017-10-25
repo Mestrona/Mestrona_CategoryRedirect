@@ -2,7 +2,7 @@
     "name": "mestrona/magento-module-categoryredirect",
     "description": "Magento 2 Module to simply customize the menu with additional URLs: Create a category, enter the redirect, done.",
     "require": {
-        "php": "~5.5.0|~5.6.0|~7.0.0",
+        "php": "~5.5.0|~5.6.0|~7.0.0|~7.1.0",
         "magento/module-catalog": "^100.0.0|^101.0.0|^102.0.0"
     },
     "type": "magento2-module",
