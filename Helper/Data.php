@@ -24,13 +24,22 @@ class Data
      * Build final URL from redirect entry
      *
      * @param $redirectUrl
+     * @return string
      */
     public function buildUrl($redirectUrl)
     {
         if ($redirectUrl == '/') {
             $redirectUrl = '';
         }
-        return $this->_urlBuilder->getUrl('', array('_direct' => $redirectUrl));
+
+        $url = parse_url($redirectUrl);
+
+        if(!empty($url['scheme']) && preg_match('/^https?/', $url['scheme'])) {
+            return $redirectUrl;
+        }
+        else {
+            return $this->_urlBuilder->getUrl('', array('_direct' => $redirectUrl));
+        }
     }
 
     public function isCurrent($redirectUrl)

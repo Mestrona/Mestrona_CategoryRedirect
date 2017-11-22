@@ -6,4 +6,5 @@
     <type name="\Magento\Catalog\Observer\MenuCategoryData">
         <plugin name="markActiveOnRedirectUrl" type="\Mestrona\CategoryRedirect\Observer\Catalog\MenuCategoryData\Plugin" sortOrder="1"/>
     </type>
+    <preference for="Magento\Theme\Block\Html\Topmenu" type="\Mestrona\CategoryRedirect\Block\Html\Topmenu"/>
 </config>
