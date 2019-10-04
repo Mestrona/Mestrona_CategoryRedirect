@@ -2,7 +2,10 @@
 
 namespace Mestrona\CategoryRedirect\Setup;
 
+use Magento\Catalog\Model\Indexer\Category\Flat\State;
+use Magento\Eav\Setup\EavSetup;
 use Magento\Eav\Setup\EavSetupFactory;
+use Magento\Framework\Indexer\IndexerRegistry;
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
@@ -17,13 +20,29 @@ class InstallData implements InstallDataInterface
     private $eavSetupFactory;
 
     /**
-     * Init
+     * Flat category indexer state
      *
-     * @param EavSetupFactory $eavSetupFactory
+     * @var State
      */
-    public function __construct(EavSetupFactory $eavSetupFactory)
+    protected $flatState;
+
+    /**
+     * Indexer registry
+     *
+     * @var IndexerRegistry
+     */
+    protected $indexerRegistry;
+
+    /**
+     * @param EavSetupFactory $eavSetupFactory
+     * @param State $flatState
+     * @param IndexerRegistry $indexerRegistry
+     */
+    public function __construct(EavSetupFactory $eavSetupFactory, State $flatState, IndexerRegistry $indexerRegistry)
     {
         $this->eavSetupFactory = $eavSetupFactory;
+        $this->flatState = $flatState;
+        $this->indexerRegistry = $indexerRegistry;
     }
 
     /**
@@ -56,5 +75,9 @@ class InstallData implements InstallDataInterface
                 'visible_on_front' => true,
             ]
         );
+
+        if ($this->flatState->isFlatEnabled()) {
+            $this->indexerRegistry->get(State::INDEXER_ID)->invalidate();
+        }
     }
 }
