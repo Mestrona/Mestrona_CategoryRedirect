@@ -6,4 +6,7 @@
     <type name="\Magento\Catalog\Observer\MenuCategoryData">
         <plugin name="markActiveOnRedirectUrl" type="\Mestrona\CategoryRedirect\Observer\Catalog\MenuCategoryData\Plugin" sortOrder="1"/>
     </type>
+    <type name="\Magento\Catalog\Model\Category">
+        <plugin name="subcategoryRedirect" type="\Mestrona\CategoryRedirect\Model\Catalog\CategoryPlugin" sortOrder="1"/>
+    </type>
 </config>
