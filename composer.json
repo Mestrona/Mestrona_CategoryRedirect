@@ -3,7 +3,7 @@
     "description": "Magento 2 Module to simply customize the menu with additional URLs: Create a category, enter the redirect, done.",
     "require": {
         "php": "^7.0",
-        "magento/module-catalog": "^100.0.0 || ^101.0.0 || ^102.0.0 || ^103.0"
+        "magento/module-catalog": "^100.0.0 || ^101.0.0 || ^102.0.0 || ^103.0 || ^104.0"
     },
     "type": "magento2-module",
     "license": [
